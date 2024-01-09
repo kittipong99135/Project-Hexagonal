@@ -1,0 +1,24 @@
+userResponses := []models.UserResponse{}
+
+for _, user := range users {
+	userRespose := models.UserResponse{
+		ID:     strconv.Itoa(int(user.ID)),
+		Email:  user.Email,
+		Name:   user.Name,
+		Phone:  user.Phone,
+		Rank:   user.Rank,
+		Status: user.Status,
+		Role:   user.Role,
+	}
+	userResponses = append(userResponses, userRespose)
+}
+
+userResponse := models.UserResponse{
+	ID:     strconv.Itoa(int(user.ID)),
+	Email:  user.Email,
+	Name:   user.Name,
+	Phone:  user.Phone,
+	Rank:   user.Rank,
+	Status: user.Status,
+	Role:   user.Role,
+}
