@@ -8,4 +8,5 @@ type UserRepository interface {
 	RepActiveStatus(string, string) (*models.User, error)
 	RepDeleteUser(string) (string, error)
 	RepUpdateUser(string, *models.User) (string, error)
+	RepUpdateExit(string, string) (int, error)
 }

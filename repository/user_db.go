@@ -61,3 +61,13 @@ func (r userRepository) RepUpdateUser(uid string, userUpdate *models.User) (stri
 	}
 	return "Update user success.", nil
 }
+
+func (r userRepository) RepUpdateExit(uid string, email string) (int, error) {
+	var users []models.User
+	result := r.db.Find(&users, "id !=? and email =?", uid, email)
+	if result.Error != nil {
+		return 0, result.Error
+	}
+
+	return int(result.RowsAffected), result.Error
+}

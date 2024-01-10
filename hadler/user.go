@@ -128,6 +128,7 @@ func (h userHandler) Update(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Update user invalids",
+			"error":   err,
 		})
 	}
 

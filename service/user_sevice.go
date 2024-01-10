@@ -4,6 +4,7 @@ import (
 	"auth-hex/models"
 	"auth-hex/repository"
 	"errors"
+	"fmt"
 	"strconv"
 )
 
@@ -89,9 +90,20 @@ func (s userService) SrvDeleteUser(uid string) (string, error) {
 }
 
 func (s userService) SrvUpdateUser(uid string, userUpdate *models.User) (string, error) {
-	result, err := s.userRepo.RepUpdateUser(uid, userUpdate)
+
+	emailExit, err := s.userRepo.RepUpdateExit(uid, userUpdate.Email)
 	if err != nil {
-		return "", errors.New("Update user invslid.")
+		fmt.Println("Invalids bro")
+		return "", errors.New("Update user invalid.")
+	}
+	if emailExit != 0 {
+		return "", errors.New("Email exists.")
+	}
+
+	result, err := s.userRepo.RepUpdateUser(uid, userUpdate)
+
+	if err != nil {
+		return "", errors.New("Update user invalid.")
 	}
 	return result, nil
 }
