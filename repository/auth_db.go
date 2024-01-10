@@ -23,7 +23,7 @@ func (r authRepository) RepCreate(user models.User) (*models.User, error) {
 	return &user, result.Error
 }
 
-func (r authRepository) RepGetById(id int) (*models.User, error) {
+func (r authRepository) RepGetById(id string) (*models.User, error) {
 	var user models.User
 	result := r.db.Find(&user, "id =?", id)
 	if result.Error != nil {

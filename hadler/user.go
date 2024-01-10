@@ -3,7 +3,10 @@ package hadler
 import (
 	"auth-hex/models"
 	"auth-hex/service"
+	"errors"
 	"fmt"
+	"os"
+	"strings"
 
 	"github.com/gofiber/fiber/v2"
 	"github.com/golang-jwt/jwt/v5"
@@ -128,7 +131,7 @@ func (h userHandler) Update(c *fiber.Ctx) error {
 		return c.Status(500).JSON(fiber.Map{
 			"status":  "error",
 			"message": "Update user invalids",
-			"error":   err,
+			"error":   err.Error(),
 		})
 	}
 
@@ -137,4 +140,38 @@ func (h userHandler) Update(c *fiber.Ctx) error {
 		"message": "Update user success",
 		"result":  result,
 	})
+}
+
+func (h userHandler) ValidatetEst(c *fiber.Ctx) error {
+	s := c.Get("Authorization")
+
+	token := strings.TrimPrefix(s, "Bearer ")
+	result, err := jwt.Parse(token, TestValids)
+	var uid string
+	fmt.Println(result.Valid)
+	if !result.Valid {
+		switch {
+		case errors.Is(err, jwt.ErrTokenExpired) || errors.Is(err, jwt.ErrTokenNotValidYet):
+			uid, _ = result.Claims.GetIssuer()
+		case result.Valid:
+			fmt.Println("You look nice today")
+		case errors.Is(err, jwt.ErrTokenMalformed):
+			fmt.Println("not event a token")
+		case errors.Is(err, jwt.ErrTokenSignatureInvalid):
+			fmt.Println("invalid signature")
+		default:
+			fmt.Println("error handle this token:", err)
+		}
+	}
+
+	_ = uid
+
+	return c.Status(200).JSON(fiber.Map{
+		"message": "Test token",
+		"result":  token,
+	})
+}
+
+func TestValids(token *jwt.Token) (interface{}, error) {
+	return []byte(os.Getenv("JWT_SECRET")), nil
 }

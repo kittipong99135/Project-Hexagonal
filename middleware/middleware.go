@@ -23,8 +23,8 @@ type ClaimsRefreshToken struct {
 
 func RequestAuth() func(*fiber.Ctx) error {
 	return jwtware.New(jwtware.Config{
-		SigningKey:   jwtware.SigningKey{Key: []byte(os.Getenv("JWT_SECRET"))},
-		ErrorHandler: errNext,
+		SigningKey: jwtware.SigningKey{Key: []byte(os.Getenv("JWT_SECRET"))},
+		// ErrorHandler: errNext,
 	})
 }
 

@@ -56,3 +56,30 @@ func (h authHandler) Login(c *fiber.Ctx) error {
 
 	return c.Status(200).JSON(resultReq)
 }
+
+func (h authHandler) ValidatetEst(c *fiber.Ctx) error {
+	access_token := c.Get("Authorization")
+
+	set_validate := models.LoginResponse{
+		Access_token: access_token,
+	}
+	resultToken, err := h.authSrv.SrvValidate(set_validate)
+
+	if err != nil {
+		if err.Error() == "refresh token" {
+			return c.Status(200).JSON(fiber.Map{
+				"status":  "warning",
+				"message": "Warning : Token has expired",
+				"result":  resultToken,
+			})
+		}
+		return c.Status(200).JSON(fiber.Map{
+			"status":  "error",
+			"message": "Error : Token not validate",
+			"error":   err.Error(),
+		})
+	}
+
+	c.Next()
+	return nil
+}

@@ -29,11 +29,12 @@ func Routes(app *fiber.App, db *gorm.DB, rd *redis.Client) {
 	userSrv := service.NewUserService(userRep)
 	userHan := hadler.NewUserHandler(userSrv)
 
+	// api.Get("/validatToken", authHan.ValidatetEst)
 	// User Routes
 	user := api.Group(
 		"/user",
+		authHan.ValidatetEst,
 		middleware.RequestAuth(),
-		middleware.RefreshAuth(),
 	)
 	user.Get("/params", userHan.UserParams)
 	user.Get("/list", userHan.ListAllUser)
@@ -41,5 +42,4 @@ func Routes(app *fiber.App, db *gorm.DB, rd *redis.Client) {
 	user.Put("/active/:id", userHan.Active)
 	user.Put("/update/:id", userHan.Update)
 	user.Delete("/remove/:id", userHan.Remove)
-
 }
